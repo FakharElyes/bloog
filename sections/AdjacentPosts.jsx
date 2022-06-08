@@ -4,6 +4,8 @@ import { AdjacentPostCard } from '../components';
 import { getAdjacentPosts } from '../services';
 
 const AdjacentPosts = ({ createdAt, slug }) => {
+  console.log(createdAt);
+
   const [adjacentPost, setAdjacentPost] = useState(null);
   const [dataLoaded, setDataLoaded] = useState(false);
 
