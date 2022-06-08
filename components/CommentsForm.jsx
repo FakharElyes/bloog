@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-const CommentsForm = () => {
+const CommentsForm = ({ slug }) => {
   const [error, setError] = useState(false);
   const [localStorage, setLocalStorage] = useState(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -9,6 +9,27 @@ const CommentsForm = () => {
   const emailEL = useRef();
   const storeDataEL = useRef();
 
+  useEffect(() => {
+    nameEL.current.value = window.localStorage.getItem('name');
+    emailEL.current.value = window.localStorage.getItem('email');
+  }, []);
+
+  const onInputChange = (e) => {
+    const { target } = e;
+    if (target.type === 'checkbox') {
+      setFormData((prevState) => ({
+        ...prevState,
+        [target.name]: target.checked,
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [target.name]: target.value,
+      }));
+    }
+  };
+
+
   const handlePostSubmission = () => {
     setError(false);
 
@@ -16,6 +37,7 @@ const CommentsForm = () => {
     const { value: comment } = emailEL.current;
     const { value: email } = commentEL.current;
     const { checked: storeData } = storeDataEL.current;
+
 
     if (!name || !email || !comment) {
       setError(true);
@@ -30,11 +52,11 @@ const CommentsForm = () => {
     };
 
     if (storeData) {
-      localStorage.setItem('name', name);
-      localStorage.setItem('email', email);
+      window.localStorage.setItem('name', name);
+      window.localStorage.setItem('email', email);
     } else {
-      localStorage.removeItem('name');
-      localStorage.removeItem('email');
+      window.localStorage.removeItem('name');
+      window.localStorage.removeItem('email');
     }
 
   }
@@ -55,7 +77,7 @@ const CommentsForm = () => {
       <div className="grid grid-cols-1 gap-4 mb-4">
         <div>
           {/* <input checked={formData.storeData} onChange={onInputChange} type="checkbox" id="storeData" name="storeData" value="true" /> */}
-          <input ref={storeDataEL.el}  type="checkbox" id="storeData" name="storeData" value="true" />
+          <input ref={storeDataEL}  type="checkbox" id="storeData" name="storeData" value="true" />
           <label className="text-gray-500 cursor-pointer" htmlFor="storeData"> Save my name, email in this browser for the next time I comment.</label>
         </div>
       </div>
